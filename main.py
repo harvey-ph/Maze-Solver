@@ -17,14 +17,23 @@ def read_pickle_file(file_name):
     return maze, agent_coord, target_coord
 
 # Visualize maze from file
-def maze_visualizing(maze, agent, target_list):
+def maze_visualizing(maze, agent, target, path=[], delay=0.1):
+    plt.ion()
     fig, ax = plt.subplots(figsize=(maze.shape[1], maze.shape[0]))
     cmap = plt.cm.colors.ListedColormap(['white', 'black'])
     circle = plt.Circle((agent[1], agent[0]), radius=0.3, color='blue')
     plt.gca().add_patch(circle)
-    for target in target_list:
-        circle_target = plt.Circle((target[1], target[0]), radius=0.3, color='red')
-        plt.gca().add_patch(circle_target)
+
+    circle_target = plt.Circle((target[1], target[0]), radius=0.3, color='red')
+    plt.gca().add_patch(circle_target)
+
+    for move in path:
+        circle_explo = plt.Circle((move[1], move[0]), radius=0.3, color='green')
+        plt.gca().add_patch(circle_explo)
+        plt.imshow(maze, cmap=cmap, interpolation='nearest')
+        plt.pause(delay)
+        # circle_explo.remove()
+    plt.ioff()
     # ax.set_xticks(np.arange(-.5, len(self.maze[0]), 1), minor=True)
     # ax.set_yticks(np.arange(-.5, len(self.maze), 1), minor=True)
     ax.grid(which='minor', color='grey', linewidth=2)
@@ -72,15 +81,18 @@ if __name__ == '__main__':
     # maze.maze_visualizing()
 
     # Maze from pickle file
-    maze, start, target = read_pickle_file('Saved_Maze/complex_maze.pkl')
-    maze_visualizing(maze, start, [target])
+    maze, start, target = read_pickle_file('Saved_Maze/300x300_simple_maze.pkl')
+    # maze_visualizing(maze, start, [target])
 
     # MCTS Solver
     path_result, total_time, memory_info = mcts_solving(maze, start, target)
 
     # UCS Solver
+
     # path_result, total_time, memory_info = ucs_solving(maze, start, target)
     print("Path found: ", path_result)
     print("Path length: ", len(path_result))
     print("Total time: ", total_time)
     print("Memory usage: ", memory_info)
+    # path_result.remove(start)
+    # maze_visualizing(maze, start, target, path_result)
