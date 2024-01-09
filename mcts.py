@@ -134,3 +134,7 @@ if __name__ == "__main__":
     solver = MCTS_Solver(maze.maze, maze.agent_coord, maze.target_list[0])
     result = solver.run()
     print(solver.path_result)
+
+    # print(solver.list_of_nodes_position)
+    # maze.maze_visualizing()
+    # maze.visualizing_animation(solver.list_of_nodes_position)
