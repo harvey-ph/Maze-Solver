@@ -18,7 +18,7 @@ def read_pickle_file(file_name):
 
 # Visualize maze from file
 def maze_visualizing(maze, agent, target, path=[], delay=0.1):
-    plt.ion()
+    # plt.ion()
     fig, ax = plt.subplots(figsize=(maze.shape[1], maze.shape[0]))
     cmap = plt.cm.colors.ListedColormap(['white', 'black'])
     circle = plt.Circle((agent[1], agent[0]), radius=0.3, color='blue')
@@ -30,10 +30,10 @@ def maze_visualizing(maze, agent, target, path=[], delay=0.1):
     for move in path:
         circle_explo = plt.Circle((move[1], move[0]), radius=0.3, color='green')
         plt.gca().add_patch(circle_explo)
-        plt.imshow(maze, cmap=cmap, interpolation='nearest')
-        plt.pause(delay)
+        # plt.imshow(maze, cmap=cmap, interpolation='nearest')
+        # plt.pause(delay)
         # circle_explo.remove()
-    plt.ioff()
+    # plt.ioff()
     # ax.set_xticks(np.arange(-.5, len(self.maze[0]), 1), minor=True)
     # ax.set_yticks(np.arange(-.5, len(self.maze), 1), minor=True)
     ax.grid(which='minor', color='grey', linewidth=2)
@@ -74,25 +74,34 @@ def ucs_solving(maze, start, target):
     
 
 if __name__ == '__main__':
-    
+    # PLEASE READ README.md BEFORE RUNNING THIS CODE
+
     # Generating environment
-    # maze = Environment_Generating(cfg.MAZE_WIDTH, cfg.MAZE_HEIGHT, cfg.AGENT_AREA, cfg.MIN_DISTANCE, cfg.NUM_OF_TARGETS, cfg.MAZE_TYPE, cfg.IS_SAVE)
-    # maze.main_generating()
-    # maze.maze_visualizing()
+    maze_bot = Environment_Generating(cfg.MAZE_WIDTH, cfg.MAZE_HEIGHT, cfg.AGENT_AREA, cfg.MIN_DISTANCE, cfg.NUM_OF_TARGETS, cfg.MAZE_TYPE, cfg.IS_SAVE)
+    maze_bot.main_generating()
+    maze = maze_bot.maze
+    start = maze_bot.agent_coord
+    target = maze_bot.target_list[0]
 
     # Maze from pickle file
-    maze, start, target = read_pickle_file('Saved_Maze/300x300_simple_maze.pkl')
-    # maze_visualizing(maze, start, [target])
+    # maze, start, target = read_pickle_file('Saved_Maze/50x50_simple_maze.pkl')
 
     # MCTS Solver
     path_result, total_time, memory_info = mcts_solving(maze, start, target)
+    print("Path found by MCTS: ", path_result)
+    print("MCTS Path length: ", len(path_result))
+    print("MCTS Total time: ", total_time)
+    print("MCTS Memory usage: ", memory_info)
+    path_result.remove(start)
+    path_result.remove(target)
+    maze_visualizing(maze, start, target, path_result)
 
     # UCS Solver
-
-    # path_result, total_time, memory_info = ucs_solving(maze, start, target)
-    print("Path found: ", path_result)
-    print("Path length: ", len(path_result))
-    print("Total time: ", total_time)
-    print("Memory usage: ", memory_info)
-    # path_result.remove(start)
-    # maze_visualizing(maze, start, target, path_result)
+    path_result, total_time, memory_info = ucs_solving(maze, start, target)
+    print("Path found by UCS: ", path_result)
+    print("UCS Path length: ", len(path_result))
+    print("UCS Total time: ", total_time)
+    print("UCS Memory usage: ", memory_info)
+    path_result.remove(start)
+    path_result.remove(target)
+    maze_visualizing(maze, start, target, path_result)
