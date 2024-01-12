@@ -8,6 +8,7 @@ How to use:
 
 ## Important Note
 1. If the maze is too complex, the program will take a long time to solve it.
+Better to comment the visualization part in `main.py` to speed up the process.
 2. If MCTS can not return the result, try to increase the number of iteration in the config file.
 3. This code is tested on Python 3.11.6 in Windows 11 and Ubuntu 22.04 (Debian and Linux not tested yet).
 
